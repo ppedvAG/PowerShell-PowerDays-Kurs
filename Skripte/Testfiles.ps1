@@ -11,11 +11,22 @@ Param(
     [int]$FileCount = 5,
 
     [ValidateSet("Empty","ipconfig","RandomNr","PowerShellHistory")]
-    [string]$FileContent
+    [string]$FileContent = "Empty",
+
+    [switch]$Force
 )
 
-
-
+if(Test-Path -Path $Path)
+{
+    if($Force)
+    {
+        Remove-Item -Path $Path -Recurse -Force
+    }
+    else
+    {
+        throw "Ordner schon vorhanden"
+    }
+}
 $Ordner = @()
 $Ordner += New-Item -Path $Path -ItemType Directory
 
@@ -26,6 +37,15 @@ for($i = 0;$i -lt $DirCount; $i++)
     $Ordner += New-Item -Path "$Path\Ordner$i" -ItemType Directory
 }
 
+[string]$Content 
+switch($FileContent)
+{
+    "Empty" {$Content = ""}
+    "ipconfig" {$Content = Get-NetIPConfiguration}
+    "RandomNr" {$Content = Get-Random}
+    "PowerShellHistory" {$Content = Get-History }
+}
+
 foreach($dir in $Ordner)
 {
     for($i = 0;$i -lt $DirCount; $i++)
@@ -33,7 +53,7 @@ foreach($dir in $Ordner)
     Write-Debug -Message "schleife Dateien"
     Write-Verbose -Message "$($dir.FullName)\Datei$i.txt"
        #New-Item -Path ($dir.FullName + "\Datei$i.txt") -ItemType File
-       New-Item -Path "$($dir.FullName)\Datei$i.txt" -ItemType File
+       New-Item -Path "$($dir.FullName)\Datei$i.txt" -ItemType File -Value $Content
     }
 }
 
