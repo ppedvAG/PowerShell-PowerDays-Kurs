@@ -37,18 +37,18 @@ for($i = 0;$i -lt $DirCount; $i++)
     $Ordner += New-Item -Path "$Path\Ordner$i" -ItemType Directory
 }
 
-[string]$Content 
+$Content 
 switch($FileContent)
 {
     "Empty" {$Content = ""}
-    "ipconfig" {$Content = Get-NetIPConfiguration}
+    "ipconfig" {$Content = Get-NetIPConfiguration | Out-String}
     "RandomNr" {$Content = Get-Random}
-    "PowerShellHistory" {$Content = Get-History }
+    "PowerShellHistory" {$Content = Get-History | Out-String }
 }
 
 foreach($dir in $Ordner)
 {
-    for($i = 0;$i -lt $DirCount; $i++)
+    for($i = 0;$i -lt $FileCount; $i++)
     {
     Write-Debug -Message "schleife Dateien"
     Write-Verbose -Message "$($dir.FullName)\Datei$i.txt"
