@@ -1,11 +1,20 @@
-﻿Param(
+﻿[cmdletBinding()]
+Param(
     [Parameter(Mandatory=$true)]
-    $Path,
+    [ValidateScript({Test-Path -Path $PSItem -IsValid })]
+    [string]$Path,
 
-    $DirCount,
+    [ValidateRange(3,10)]
+    [int]$DirCount = 5,
 
-    $FileCount
+    [ValidateRange(3,10)]
+    [int]$FileCount = 5,
+
+    [ValidateSet("Empty","ipconfig","RandomNr","PowerShellHistory")]
+    [string]$FileContent
 )
+
+
 
 $Ordner = @()
 $Ordner += New-Item -Path $Path -ItemType Directory
