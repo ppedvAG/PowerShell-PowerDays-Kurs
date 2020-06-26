@@ -59,3 +59,23 @@ foreach($dir in $Ordner)
 }
 
 }
+
+function Get-SecEvents
+{
+<#
+    .SYNOPSIS
+    Kurzbeschreibung des Skriptes
+    .DESCRIPTION
+    Langbeschreibung
+#>
+Param(
+    [Parameter(Mandatory=$true)]
+    [string]$ComputerName,
+
+    [int]$EventId = 4624,
+
+    [int]$count = 5
+)
+Write-Verbose -Message "Vor Abfrage"
+Get-WinEvent -LogName Security -ComputerName $ComputerName | Where-Object Id -eq $EventId | Select-Object -First $count
+}
